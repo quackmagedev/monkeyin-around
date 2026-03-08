@@ -1,0 +1,14 @@
+{
+    "servers": {
+        "godot": {
+            "type": "stdio",
+            "command": "node",
+            "args": [
+                "C:\\Users\\isaac\\Documents\\Godot\\godot-mcp\\build\\index.js"
+            ],
+            "env": {
+                "GODOT_PATH": "C:\\Users\\isaac\\Documents\\Godot\\Godot_v4.6.1-stable_mono_win64\\Godot_v4.6.1-stable_mono_win64.exe"
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+# Godot
+.godot/
+*.uid
+
+# Mono/C#
+.mono/
+data_*/
+mono_crash.*.json
+*.user
+.vs/
+obj/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
