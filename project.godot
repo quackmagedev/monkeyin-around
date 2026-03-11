@@ -11,9 +11,15 @@ config_version=5
 [application]
 
 config/name="monkeyin-around"
-run/main_scene="res://Level.tscn"
+run/main_scene="res://scenes/Level.tscn"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="res://monkeyin-around.png"
+config/icon="res://textures/player.png"
+
+[display]
+
+window/size/mode=2
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 

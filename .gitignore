@@ -14,3 +14,7 @@ bin/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local scratch files
+notes.txt
+*.ai
