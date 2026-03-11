@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cta75j44qdbb6"]
+
+[ext_resource type="Script" uid="uid://48t00g041kq8" path="res://Player.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://phor5ese0n37" path="res://monkeyin-around.png" id="2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 20.0
+height = 40.0
+
+[node name="Player" type="RigidBody2D" unique_id=233491347]
+mass = 10.0
+linear_damp = 0.1
+angular_damp = 2.0
+script = ExtResource("1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1536983116]
+shape = SubResource("CapsuleShape2D_1")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1870749264]
+position = Vector2(0.25758332, -1.2375022)
+scale = Vector2(0.080009185, 0.08000918)
+texture = ExtResource("2")
+
+[node name="LeftHandMarker" type="Marker2D" parent="." unique_id=1144789998]
+position = Vector2(-20, 15)
+
+[node name="RightHandMarker" type="Marker2D" parent="." unique_id=880683730]
+position = Vector2(20, 15)
