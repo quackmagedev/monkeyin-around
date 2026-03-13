@@ -18,3 +18,8 @@ Thumbs.db
 # Local scratch files
 notes.txt
 *.ai
+*.tmp
+
+# Claude / MCP
+.claude/
+.mcp.json
