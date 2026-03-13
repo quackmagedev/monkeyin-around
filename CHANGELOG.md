@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.0] - 2026-03-12
+
+### Added
+- Collectible bananas scattered through the level (8 total); collecting all triggers the win condition
+- Banana counter HUD label ("X / 8 bananas") displayed on-screen during play
+- Win screen overlay with image and "You ate all the bananas! Time for a nap." text
+- Banana collect animation: shake then shrink to zero using a tween
+- Main menu scene with title and Play button
+- Sound effects: grab sound on successful hand grab, eat sound on banana collection, monkey sound on win
+
+### Changed
+- Player fully disabled (Freeze + ProcessMode Disabled) on win so movement stops
+- Arm edges changed from antialiased to hard-pixel (DrawPolyline antialiased=false)
+- Project main scene changed from Level to MainMenu
+
 ## [0.2.0] - 2026-03-11
 
 ### Added

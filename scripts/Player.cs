@@ -5,6 +5,7 @@ public partial class Player : RigidBody2D
 	private GrabHand _leftHand;
 	private GrabHand _rightHand;
 	private Vector2 _aimPos;
+	private AudioStreamPlayer _grabSound;
 
 	private const float MoveForce = 5000f;
 	private const float ClimbForce = 25000f;
@@ -16,7 +17,13 @@ public partial class Player : RigidBody2D
 		_leftHand = new GrabHand(this, GetNode<Marker2D>("LeftHandMarker"));
 		_rightHand = new GrabHand(this, GetNode<Marker2D>("RightHandMarker"));
 		_aimPos = GlobalPosition + Vector2.Up * 150f;
+
+		_grabSound = new AudioStreamPlayer();
+		_grabSound.Stream = GD.Load<AudioStream>("res://assets/audio/grab.mp3");
+		AddChild(_grabSound);
 	}
+
+	public void PlayGrabSound() => _grabSound.Play();
 
 	// Returns a slightly spread target for each hand.
 	// side: -1 = left, +1 = right
@@ -61,33 +68,58 @@ public partial class Player : RigidBody2D
 		if (@event.IsActionReleased("grab_right")) _rightHand.Release();
 	}
 
+	// Draws a bezier-curved arm. bowSign=+1 bows left of the direction, -1 bows right.
+	private void DrawElasticArm(Vector2 from, Vector2 to, Color color, float bowSign = 1f)
+	{
+		Vector2 dir = to - from;
+		float len = dir.Length();
+		if (len < 1f) return;
+
+		// Control point bows perpendicular to the arm; more bow when stretched
+		Vector2 perp = new Vector2(-dir.Y, dir.X) / len;
+		Vector2 ctrl = (from + to) * 0.5f + perp * bowSign * Mathf.Min(len * 0.25f, 18f);
+
+		const int Steps = 12;
+		var pts = new Vector2[Steps + 1];
+		for (int i = 0; i <= Steps; i++)
+		{
+			float t = i / (float)Steps;
+			float u = 1f - t;
+			pts[i] = u * u * from + 2f * u * t * ctrl + t * t * to;
+		}
+		DrawPolyline(pts, color, 7f, false);
+	}
+
 	public override void _Draw()
 	{
-		var armBrown = new Color(0.651f, 0.443f, 0.243f); // #a6713e
+		var armBrown = new Color(0.600f, 0.400f, 0.200f); // #996633
 		var handTan  = new Color(0.910f, 0.729f, 0.569f); // #e8ba91
+		var font     = ThemeDB.FallbackFont;
 
 		// Left arm
 		Vector2 leftTip = _leftHand.IsGrabbing && _leftHand.GrabPoint.HasValue
 			? ToLocal(_leftHand.GrabPoint.Value)
 			: ToLocal(ArmTarget(-1));
-		DrawLine(new Vector2(-15, 10), leftTip, armBrown, 7f);
-		DrawCircle(leftTip, (_leftHand.IsGrabbing || _leftHand.WantsGrab) ? 5f : 10f, handTan);
+		DrawElasticArm(new Vector2(-13, 10), leftTip, armBrown, -1f);
+		float leftR = (_leftHand.IsGrabbing || _leftHand.WantsGrab) ? 5f : 10f;
+		DrawCircle(leftTip, leftR, handTan);
 
-		// Left label — counter-rotate so it stays upright
+		// "L" centered in hand — counter-rotate so it stays upright
 		DrawSetTransform(leftTip, -Rotation, Vector2.One);
-		DrawString(ThemeDB.FallbackFont, new Vector2(-30, -14), "Left Click", HorizontalAlignment.Left, -1, 10, Colors.White);
+		DrawString(font, new Vector2(-3f, 4f), "L", HorizontalAlignment.Center, -1, 9, Colors.White);
 		DrawSetTransform(Vector2.Zero, 0f, Vector2.One);
 
 		// Right arm
 		Vector2 rightTip = _rightHand.IsGrabbing && _rightHand.GrabPoint.HasValue
 			? ToLocal(_rightHand.GrabPoint.Value)
 			: ToLocal(ArmTarget(1));
-		DrawLine(new Vector2(15, 10), rightTip, armBrown, 7f);
-		DrawCircle(rightTip, (_rightHand.IsGrabbing || _rightHand.WantsGrab) ? 5f : 10f, handTan);
+		DrawElasticArm(new Vector2(13, 10), rightTip, armBrown);
+		float rightR = (_rightHand.IsGrabbing || _rightHand.WantsGrab) ? 5f : 10f;
+		DrawCircle(rightTip, rightR, handTan);
 
-		// Right label — counter-rotate so it stays upright
+		// "R" centered in hand — counter-rotate so it stays upright
 		DrawSetTransform(rightTip, -Rotation, Vector2.One);
-		DrawString(ThemeDB.FallbackFont, new Vector2(5, -14), "Right Click", HorizontalAlignment.Left, -1, 10, Colors.White);
+		DrawString(font, new Vector2(-3f, 4f), "R", HorizontalAlignment.Center, -1, 9, Colors.White);
 		DrawSetTransform(Vector2.Zero, 0f, Vector2.One);
 	}
 }

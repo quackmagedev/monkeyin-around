@@ -77,6 +77,7 @@ public class GrabHand
 		_joint.Softness = 0f;
 
 		IsGrabbing = true;
+		(_body as Player)?.PlayGrabSound();
 	}
 
 }
